@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>알리 라리자니 | 매크로렌즈 인물사전</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C4A35A;
+    --gold-light: #e0c07a;
+    --red: #C0392B;
+    --ink: #0a0a0a;
+    --ink-mid: #141414;
+    --ink-soft: #1e1e1e;
+    --line: rgba(196,163,90,.18);
+    --text: #e8e0d0;
+    --text-dim: rgba(232,224,208,.55);
+    --text-muted: rgba(232,224,208,.35);
+    --green: #27ae60;
+    --blue: #2980b9;
+    --danger: #e74c3c;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    padding: 64px 40px 52px;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 100% 0%, rgba(192,57,43,.14) 0%, transparent 55%),
+      radial-gradient(ellipse at 0% 100%, rgba(196,163,90,.07) 0%, transparent 50%);
+  }
+  .header-inner { max-width: 900px; margin: 0 auto; position: relative; display: flex; gap: 48px; align-items: flex-start; }
+
+  .header-portrait { flex-shrink: 0; width: 140px; }
+  .portrait-frame {
+    width: 140px; height: 175px;
+    background: linear-gradient(135deg, #1a0a0a, #0f0f0f);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px; position: relative; overflow: hidden;
+  }
+  .portrait-frame::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(10,10,10,.8));
+  }
+  .portrait-label {
+    margin-top: 8px; font-size: 10px; color: var(--text-muted);
+    font-family: 'DM Mono', monospace; text-align: center; letter-spacing: 1px;
+  }
+  .header-content { flex: 1; }
+
+  .brand-row {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .brand-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  .brand-name { font-size: 11px; font-weight: 500; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; font-family: 'DM Mono', monospace; }
+  .series-badge {
+    margin-left: auto;
+    background: rgba(192,57,43,.15); border: 1px solid rgba(192,57,43,.4);
+    border-radius: 20px; padding: 3px 12px;
+    font-size: 10px; color: #ff8a7a;
+    font-family: 'DM Mono', monospace; letter-spacing: 1px;
+  }
+  .live-dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: #ff4444; margin-right: 4px;
+    animation: pulse 1.4s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+  h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(28px, 4vw, 44px); font-weight: 900;
+    line-height: 1.15; letter-spacing: -1px; color: #fff; margin-bottom: 6px;
+  }
+  .name-en { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--gold); letter-spacing: 3px; margin-bottom: 18px; display: block; }
+  .header-sub { font-size: 14px; color: var(--text-dim); line-height: 1.8; max-width: 560px; }
+
+  .keystats {
+    display: flex; flex-wrap: wrap; gap: 0; margin-top: 28px;
+    border: 1px solid var(--line); border-radius: 4px; overflow: hidden;
+  }
+  .ks-item { flex: 1; min-width: 120px; padding: 14px 18px; border-right: 1px solid var(--line); background: rgba(196,163,90,.03); }
+  .ks-item:last-child { border-right: none; }
+  .ks-label { font-size: 9px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 5px; }
+  .ks-val { font-size: 13px; font-weight: 600; color: var(--gold-light); font-family: 'DM Mono', monospace; }
+
+  /* ── NAV ── */
+  nav { background: var(--ink-mid); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 100; }
+  .nav-inner { max-width: 900px; margin: 0 auto; display: flex; gap: 2px; padding: 0 40px; overflow-x: auto; }
+  .nav-tab {
+    color: var(--text-muted); font-size: 12px; font-weight: 500;
+    padding: 13px 16px; cursor: pointer; border: none; background: none;
+    white-space: nowrap; text-decoration: none; display: inline-block;
+    transition: color .2s; letter-spacing: .3px;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 0 40px 80px; }
+
+  .section { margin-top: 60px; }
+  .section-header {
+    display: flex; align-items: flex-start; gap: 18px;
+    margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--line);
+  }
+  .section-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); font-weight: 500; letter-spacing: 1px; padding-top: 4px; flex-shrink: 0; opacity: .7; }
+  .section-title { font-family: 'Noto Serif KR', serif; font-size: clamp(18px,2.2vw,22px); font-weight: 700; color: #fff; line-height: 1.35; }
+  .section-title small { display: block; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; color: var(--text-muted); font-weight: 400; margin-top: 4px; letter-spacing: .3px; }
+
+  .prose { color: var(--text-dim); line-height: 1.95; font-size: 14.5px; }
+  .prose + .prose { margin-top: 14px; }
+  .prose strong { color: var(--text); font-weight: 600; }
+  .prose em { color: var(--gold-light); font-style: normal; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 32px; margin-top: 8px; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--gold), rgba(196,163,90,.1)); }
+  .tl-item { position: relative; margin-bottom: 36px; }
+  .tl-dot { position: absolute; left: -28px; top: 5px; width: 14px; height: 14px; border-radius: 50%; background: var(--ink); border: 2px solid var(--gold); box-shadow: 0 0 8px rgba(196,163,90,.3); }
+  .tl-dot.gold { background: var(--gold); }
+  .tl-dot.key  { background: var(--red); border-color: var(--red); box-shadow: 0 0 10px rgba(192,57,43,.4); }
+  .tl-dot.now  { background: #ff2222; border-color: #ff2222; box-shadow: 0 0 0 4px rgba(255,34,34,.2), 0 0 10px rgba(255,34,34,.4); }
+  .tl-era { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); font-weight: 500; letter-spacing: 1px; margin-bottom: 6px; opacity: .8; }
+  .tl-title { font-weight: 700; color: #fff; font-size: 15px; margin-bottom: 6px; line-height: 1.4; }
+  .tl-body { font-size: 13.5px; color: var(--text-dim); line-height: 1.85; }
+  .tl-body strong { color: var(--text); }
+
+  /* ── ALERT ── */
+  .alert { margin: 20px 0; padding: 16px 20px; border-radius: 4px; display: flex; gap: 14px; align-items: flex-start; font-size: 13.5px; line-height: 1.75; }
+  .alert.gold  { background: rgba(196,163,90,.08); border-left: 3px solid var(--gold); color: #e0c07a; }
+  .alert.blue  { background: rgba(41,128,185,.10); border-left: 3px solid var(--blue); color: #a8d4f0; }
+  .alert.red   { background: rgba(192,57,43,.10); border-left: 3px solid var(--red); color: #ffb3a7; }
+  .alert.green { background: rgba(39,174,96,.10); border-left: 3px solid var(--green); color: #a8e0bc; }
+  .alert.dark  { background: rgba(255,255,255,.04); border-left: 3px solid rgba(196,163,90,.4); color: var(--text-dim); }
+  .alert-icon  { font-size: 18px; flex-shrink: 0; }
+  .alert strong { color: inherit; font-weight: 700; }
+
+  /* ── QUOTE ── */
+  .quote-block {
+    background: #0d0d0d; border: 1px solid var(--line);
+    border-left: 3px solid var(--gold); border-radius: 4px;
+    padding: 24px 28px; margin: 20px 0; position: relative;
+  }
+  .quote-mark { position: absolute; top: 14px; left: 20px; font-size: 48px; color: rgba(196,163,90,.15); font-family: Georgia, serif; line-height: 1; }
+  .quote-text { font-family: 'Noto Serif KR', serif; font-size: 15px; color: rgba(232,224,208,.8); line-height: 1.9; padding-left: 16px; }
+  .quote-src  { margin-top: 12px; padding-left: 16px; font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; letter-spacing: 1px; }
+
+  /* ── TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 20px 0; }
+  .data-table thead tr { border-bottom: 2px solid var(--line); }
+  .data-table thead th { padding: 10px 14px; text-align: left; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); font-family: 'DM Mono', monospace; font-weight: 500; }
+  .data-table tbody tr { border-bottom: 1px solid rgba(196,163,90,.07); transition: background .15s; }
+  .data-table tbody tr:hover { background: rgba(196,163,90,.04); }
+  .data-table tbody td { padding: 12px 14px; vertical-align: top; color: var(--text-dim); }
+  .data-table tbody td:first-child { color: var(--text); font-weight: 600; font-size: 13px; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; font-family: 'DM Mono', monospace; }
+  .tag-red   { background: rgba(192,57,43,.2); color: #ff8a7a; }
+  .tag-gold  { background: rgba(196,163,90,.15); color: var(--gold); }
+  .tag-blue  { background: rgba(41,128,185,.15); color: #7ec8f0; }
+  .tag-green { background: rgba(39,174,96,.15); color: #6ed99a; }
+  .tag-gray  { background: rgba(255,255,255,.06); color: var(--text-muted); }
+
+  /* ── CARD GRID ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 20px 0; }
+  .card { background: var(--ink-mid); border: 1px solid var(--line); border-radius: 4px; padding: 20px 22px; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .card.gold::before  { background: var(--gold); }
+  .card.blue::before  { background: var(--blue); }
+  .card.red::before   { background: var(--red); }
+  .card.green::before { background: var(--green); }
+  .card-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 8px; }
+  .card.gold .card-label  { color: var(--gold); }
+  .card.blue .card-label  { color: #7ec8f0; }
+  .card.red  .card-label  { color: #ff8a7a; }
+  .card.green .card-label { color: #6ed99a; }
+  .card-title { font-weight: 700; color: #fff; font-size: 14px; margin-bottom: 8px; line-height: 1.4; }
+  .card-body  { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+  /* ── PHILOSOPHY ── */
+  .phil-item { display: flex; gap: 20px; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .phil-item:last-child { border-bottom: none; }
+  .phil-num { font-family: 'DM Mono', monospace; font-size: 28px; font-weight: 700; color: rgba(196,163,90,.2); flex-shrink: 0; width: 40px; line-height: 1; margin-top: 2px; }
+  .phil-title { font-weight: 700; color: var(--gold-light); font-size: 14px; margin-bottom: 6px; }
+  .phil-body  { font-size: 13.5px; color: var(--text-dim); line-height: 1.85; }
+
+  /* ── MARKET BOX ── */
+  .market-box {
+    background: linear-gradient(135deg, #0d0800, #0a0a10);
+    border: 1px solid var(--line); border-radius: 6px;
+    padding: 28px 32px; margin: 24px 0;
+  }
+  .market-box-title { font-size: 11px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 16px; }
+  .market-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(196,163,90,.08); }
+  .market-row:last-child { border-bottom: none; }
+  .market-label { font-size: 13px; color: var(--text-dim); }
+  .market-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; }
+  .market-val.up   { color: #6ed99a; }
+  .market-val.down { color: #ff8a7a; }
+  .market-val.gold { color: var(--gold); }
+  .market-val.warn { color: #f0a965; }
+
+  /* ── DIVIDER ── */
+  .divider { margin: 48px 0 0; border: none; border-top: 1px solid var(--line); }
+
+  /* ── FINAL ── */
+  .final-box {
+    margin-top: 48px;
+    background: linear-gradient(135deg, #0f0a05, #120808);
+    border: 1px solid rgba(196,163,90,.2); border-radius: 6px; padding: 36px 40px;
+  }
+  .final-eyebrow { font-size: 10px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 16px; }
+  .final-title { font-family: 'Noto Serif KR', serif; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 18px; line-height: 1.4; }
+  .final-body { font-size: 14.5px; color: rgba(232,224,208,.7); line-height: 1.95; margin-bottom: 14px; }
+  .final-body strong { color: var(--gold-light); }
+
+  /* ── FOOTER ── */
+  footer { border-top: 1px solid var(--line); padding: 28px 40px; font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.8; }
+  footer a { color: var(--gold); text-decoration: none; }
+
+  @media(max-width: 640px) {
+    header { padding: 40px 20px 36px; }
+    .header-inner { flex-direction: column; gap: 28px; }
+    .header-portrait { width: 100%; display: flex; gap: 16px; align-items: center; }
+    .portrait-frame { width: 80px; height: 100px; font-size: 40px; }
+    main { padding: 0 20px 60px; }
+    .nav-inner { padding: 0 20px; }
+    footer { padding: 24px 20px; }
+    .final-box { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="header-inner">
+    <div class="header-portrait">
+      <div class="portrait-frame">
+        <img src="larijani.jpg" alt="알리 라리자니"
+             style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
+      </div>
+      <div class="portrait-label">이란 차기 최고지도자<br>최유력 후보</div>
+    </div>
+    <div class="header-content">
+      <div class="brand-row">
+        <div class="brand-dot"></div>
+        <span class="brand-name">Macro Lens · 인물사전</span>
+        <span class="series-badge"><span class="live-dot"></span>Vol. 002 · LIVE</span>
+      </div>
+      <h1>알리 라리자니</h1>
+      <span class="name-en">ALI ARDASHIR LARIJANI · 1958~</span>
+      <p class="header-sub">
+        성직자 가문 출신의 철학 박사, IRGC 사령관, 핵협상 대표, 의회의장.<br>
+        이란 권력의 모든 층을 관통한 남자가 지금 최고지도자 자리 앞에 서 있다.
+      </p>
+      <div class="keystats">
+        <div class="ks-item">
+          <div class="ks-label">출생</div>
+          <div class="ks-val">1958 · 나자프(이라크)</div>
+        </div>
+        <div class="ks-item">
+          <div class="ks-label">학력</div>
+          <div class="ks-val">테헤란大 철학 박사</div>
+        </div>
+        <div class="ks-item">
+          <div class="ks-label">현직</div>
+          <div class="ks-val">최고국가안보위 의장</div>
+        </div>
+        <div class="ks-item">
+          <div class="ks-label">전직</div>
+          <div class="ks-val">국회의장 12년</div>
+        </div>
+        <div class="ks-item">
+          <div class="ks-label">성향</div>
+          <div class="ks-val">보수적 실용주의</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-tab active" href="#family">가문과 출생</a>
+    <a class="nav-tab" href="#education">학력</a>
+    <a class="nav-tab" href="#irgc">IRGC 시대</a>
+    <a class="nav-tab" href="#media">문화·방송 시대</a>
+    <a class="nav-tab" href="#nuclear">핵협상</a>
+    <a class="nav-tab" href="#speaker">국회의장</a>
+    <a class="nav-tab" href="#now">지금</a>
+    <a class="nav-tab" href="#market">시장 의미</a>
+    <a class="nav-tab" href="#paradox">인물론</a>
+  </div>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<main>
+
+  <!-- 1. 가문과 출생 -->
+  <div class="section" id="family">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-title">
+        라리자니 가문 — 이란 권력의 유전자
+        <small>1958 · 나자프(이라크) 출생 · 마잔다란 주 아몰 출신 가문</small>
+      </div>
+    </div>
+
+    <p class="prose">알리 라리자니는 <strong>1958년 6월 3일, 이라크 나자프</strong>에서 태어났다. 그의 가문은 원래 이란 마잔다란 주 아몰 출신으로, 아버지 아야톨라 미르자 하셈 아몰리가 1931년 레자 샤의 압박을 피해 이라크 나자프로 이주했다. 가족은 1961년, 라리자니가 세 살 때 이란으로 돌아왔다.</p>
+
+    <div class="alert gold">
+      <div class="alert-icon">🏛️</div>
+      <div>
+        <strong>라리자니 패밀리 — 이란 역사상 가장 강력한 형제 네트워크:</strong><br><br>
+        · <strong>알리 라리자니</strong> — 최고국가안보위 의장, 전 국회의장, 핵협상 대표<br>
+        · <strong>사데크 라리자니</strong> — 前 사법부 수장, 현 헌법수호위원회 위원<br>
+        · <strong>모하마드 자바드 라리자니</strong> — 외교관, 수학자, UN인권 대표<br>
+        · <strong>바게르 라리자니</strong> — 테헤란 의대 교수, 의료계 권위자<br>
+        · <strong>파젤 라리자니</strong> — 카나다 문화 외교관<br><br>
+        사법부·외교부·입법부·학계를 동시에 장악한 5형제. 이란 정치사에서 유례없는 가문 네트워크다.
+      </div>
+    </div>
+
+    <p class="prose">알리는 거기에 더해 아내 파리데 모타하리의 아버지, 즉 <strong>장인이 아야톨라 모르타자 모타하리</strong>다. 모타하리는 이슬람 공화국의 건국 이데올로그 중 한 명으로, 1979년 암살당한 순교자적 인물이다. 성직자 가문 출신 + 혁명 이데올로그의 사위라는 조합은 이란 체제 내에서 상상할 수 있는 가장 강력한 정통성 기반이다.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 2. 학력 -->
+  <div class="section" id="education">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-title">
+        이중 정체성의 형성 — 신학교와 철학 박사
+        <small>꼼 신학교 → 샤리프 공대 → 테헤란大 철학 박사</small>
+      </div>
+    </div>
+
+    <p class="prose">라리자니의 학문적 경력은 이란에서 극히 이례적인 이중 구조를 가진다. 그는 먼저 <strong>꼼(Qom) 신학교</strong>에서 시아파 신학을 공부했다. 동시에 세속 학문을 탐구해 <strong>샤리프 공과대학(구 아리아메흐르 공대)에서 컴퓨터공학·수학 학사</strong>를 취득했다. 이후 <strong>테헤란 대학교에서 서양 철학 석사·박사</strong>를 마쳤다.</p>
+
+    <div class="card-grid">
+      <div class="card gold">
+        <div class="card-label">신학</div>
+        <div class="card-title">꼼(Qom) 신학교</div>
+        <div class="card-body">시아파 이슬람 신학의 심장부. 성직자 자격은 취득하지 않았으나 신학적 소양으로 성직자 집단과 대화할 수 있는 드문 평신도 정치인이다.</div>
+      </div>
+      <div class="card blue">
+        <div class="card-label">이공계</div>
+        <div class="card-title">샤리프 공대 컴퓨터공학</div>
+        <div class="card-body">이란 최고 이공계 대학. 테크놀로지에 대한 감각이 훗날 IRIB(국영방송) 수장 시절 디지털 미디어 정책에 반영됐다.</div>
+      </div>
+      <div class="card green">
+        <div class="card-label">철학</div>
+        <div class="card-title">테헤란大 서양철학 박사</div>
+        <div class="card-body">칸트의 수학철학을 주제로 박사논문 작성. 칸트·크립키·데이비드 루이스 관련 저서 24권 이상 출간. 테헤란大 인문학부 교수 재직.</div>
+      </div>
+    </div>
+
+    <div class="alert blue">
+      <div class="alert-icon">📐</div>
+      <div>
+        <strong>왜 이것이 중요한가:</strong> 신학 소양 + 이공계 사고 + 서양 철학 훈련. 이 삼각 조합이 그의 정치 스타일을 만들었다. 핵협상에서 상대방의 논리 구조를 꿰뚫고, 내부에서는 성직자 언어로 설득하며, 기술·미디어 정책에서는 실용주의를 택했다. 이란 정치인 중 서방 외교관들과 가장 "같은 언어"로 대화할 수 있는 인물로 평가받는 이유다.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 3. IRGC -->
+  <div class="section" id="irgc">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-title">
+        혁명수비대(IRGC) — 군사적 뿌리
+        <small>1980년대 이란-이라크 전쟁 · IRGC 지휘관</small>
+      </div>
+    </div>
+
+    <p class="prose">라리자니는 <strong>1980년대 이란-이라크 전쟁 당시 IRGC(이슬람혁명수비대)에서 지휘관으로 복무</strong>했다. 전선 직접 전투보다는 IRGC와 의회를 잇는 연락 장교 역할을 맡았으며, 이를 통해 이란 군부 엘리트와 광범위한 인맥을 형성했다.</p>
+
+    <p class="prose">이 시기가 결정적인 이유는, <strong>IRGC가 이란 정치의 실질적 권력 기반</strong>이기 때문이다. 아야톨라 하메네이도, 현 체제의 주요 인사들도 IRGC와의 관계가 정치적 생존의 핵심이다. 라리자니는 평신도 정치인임에도 불구하고 IRGC로부터 존중받는 몇 안 되는 인물 중 하나다. 이 군사적 신뢰가 훗날 핵협상 대표, 최고국가안보위 의장 등 안보 핵심 직위를 맡을 수 있었던 기반이 됐다.</p>
+
+    <div class="alert red">
+      <div class="alert-icon">⚠️</div>
+      <div>
+        <strong>인권 문제 기록:</strong> 미국 재무부는 2026년 1월, 라리자니가 이란 내 반정부 시위 탄압을 지휘했다며 제재를 부과했다. 재무부 성명은 "라리자니가 하메네이의 지시 아래 시위대에 대한 폭력을 가장 먼저 촉구한 이란 지도자 중 한 명"이라고 명시했다. 인권 단체들은 수천 명이 사망한 탄압에 그가 책임이 있다고 주장한다.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 4. 문화·방송 -->
+  <div class="section" id="media">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-title">
+        문화부 장관 → 국영방송 수장
+        <small>1992~2004 · 12년간 이란 미디어·문화 권력 장악</small>
+      </div>
+    </div>
+
+    <p class="prose">라파산자니 대통령 시절인 1992년, 라리자니는 <strong>문화·이슬람지도부 차관</strong>을 맡았다. 이후 1994년 하메네이의 직접 발탁으로 <strong>IRIB(이슬람공화국 국영방송) 총재</strong>에 임명됐다. IRIB는 이란 전체 방송을 독점하는 최고지도자 직속 기관이다. 그는 2004년까지 무려 10년간 이 자리를 지켰다.</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-era">1994~2004 · 국영방송 수장</div>
+        <div class="tl-title">IRIB 총재 — 이란의 미디어를 설계하다</div>
+        <div class="tl-body">실용적 접근이 돋보였다. <strong>비디오 녹화 장비를 합법화</strong>하고, 할리우드·발리우드 영화의 공식 대여점을 허가했다. "불법 복제를 막기 위한 통제된 개방"이었다. 동시에 아랍어 24시간 방송 2개 채널을 신설해 이라크·레바논에 이란의 메시지를 확산시켰다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot key"></div>
+        <div class="tl-era">1990년대 · 논란</div>
+        <div class="tl-title">강제 자백 다큐멘터리 — 인권 기록의 시작</div>
+        <div class="tl-body">그의 재임 중 지식인·작가들의 강제 자백을 담은 다큐멘터리 <em>호비야트(정체성)</em>가 방영됐다. 인권단체들은 이를 이유로 라리자니를 블랙리스트에 올렸다. 이 기록은 이후 그의 대선 출마 자격 박탈 논란과 함께 지속적으로 소환된다.</div>
+      </div>
+    </div>
+
+    <p class="prose">IRIB 시절은 라리자니의 권력 기반 확장에 결정적이었다. 이란 전체 가정의 TV 수신기를 통해 그의 이름이 알려졌고, 최고지도자 직속 기관 수장으로서 하메네이와의 신뢰 관계가 깊어졌다.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 5. 핵협상 -->
+  <div class="section" id="nuclear">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div class="section-title">
+        핵협상 대표 → 최고국가안보위 의장
+        <small>2005~2007 · EU-3 협상 · 2015 JCPOA 설계 · 2025 재임</small>
+      </div>
+    </div>
+
+    <p class="prose">2005년 아흐마디네자드 대통령이 라리자니를 <strong>최고국가안보위원회(SNSC) 의장 겸 이란 핵협상 수석 대표</strong>로 임명했다. 이란의 핵 프로그램을 둘러싼 서방과의 협상에서 가장 중요한 시기에 이란의 얼굴이 됐다.</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot gold"></div>
+        <div class="tl-era">2005~2007 · 1차 SNSC 의장</div>
+        <div class="tl-title">EU-3 핵협상 — 서방과의 첫 직접 대화</div>
+        <div class="tl-body">영국·프랑스·독일과의 핵협상을 이끌었다. "이 문제는 해결 가능하다"는 실용적 언어를 구사했다. 그러나 아흐마디네자드와의 협상 전략 이견으로 2007년 사임. 강경파 대통령과 실용적 협상가의 충돌이었다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-era">2008~2020 · 국회의장</div>
+        <div class="tl-title">JCPOA 이란 국내 비준의 설계자</div>
+        <div class="tl-body">2015년 JCPOA(이란 핵합의) 체결 시 국회의장으로서 290명 의원에게 단 20분의 토론 시간을 주고 비준을 통과시켰다. 실용주의적 결단이었지만, 강경파는 이를 굴욕으로 기억한다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot now"></div>
+        <div class="tl-era">2025.8~ · 2차 SNSC 의장</div>
+        <div class="tl-title">🔴 현재 — 이란-이스라엘 12일 전쟁 이후 복귀</div>
+        <div class="tl-body">2025년 8월 이란-이스라엘 12일 전쟁 직후 페제시키안 대통령이 재임명했다. 핵협상 재개, 모스크바 다수 방문, 오만 채널 협상 참여. 하메네이 사망 직전 오만에서 미국과 접촉 중이었다.</div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">
+        내 시각에서, 이 문제(핵협상)는 해결 가능하다.
+      </div>
+      <div class="quote-src">— 알리 라리자니, 오만 국영방송 인터뷰 (2026.1) · 하메네이 사망 한 달 전</div>
+    </div>
+
+    <div class="alert red">
+      <div class="alert-icon">🚨</div>
+      <div>
+        <strong>그러나 2025년 3월, 다른 발언도 있었다:</strong><br>
+        트럼프가 이란에 핵협상 재개 서한을 보낸 직후, 라리자니는 오만 채널을 통한 협상에는 열려 있다고 하면서도 이렇게 말했다. <strong>"만약 미국, 이스라엘, 또는 그 동맹이 공격한다면, 이란은 핵무기를 개발하는 것 외에 선택지가 없을 것이다."</strong> 협상가이면서도 체제 방어자임을 동시에 증명하는 발언이다.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 6. 국회의장 -->
+  <div class="section" id="speaker">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div class="section-title">
+        국회의장 12년 — 이란 역사상 최장수
+        <small>2008~2020 · 쿰 선거구 · 입법권력의 정점</small>
+      </div>
+    </div>
+
+    <p class="prose">2008년 쿰(Qom) 선거구에서 국회의원에 당선된 라리자니는 즉시 <strong>국회의장으로 선출됐다</strong>. 이후 2020년까지 무려 12년간 이 자리를 유지했다. 이란 역사상 최장수 국회의장이다.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>시기</th>
+          <th>대통령</th>
+          <th>라리자니의 역할</th>
+          <th>특징</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2008~2013</td>
+          <td>아흐마디네자드 2기</td>
+          <td>대통령 견제 · 갈등</td>
+          <td><span class="tag tag-red">충돌</span> 핵전략 이견 지속</td>
+        </tr>
+        <tr>
+          <td>2013~2021</td>
+          <td>로하니</td>
+          <td>JCPOA 비준 주도</td>
+          <td><span class="tag tag-green">협력</span> 실용주의 연대</td>
+        </tr>
+        <tr>
+          <td>2020</td>
+          <td>로하니 말기</td>
+          <td>대선 출마 자격 박탈</td>
+          <td><span class="tag tag-gold">좌절</span> 딸 해외 거주 문제</td>
+        </tr>
+        <tr>
+          <td>2021~2024</td>
+          <td>라이시</td>
+          <td>정치적 잠복기</td>
+          <td><span class="tag tag-gray">대기</span> 복귀 시기 탐색</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="alert gold">
+      <div class="alert-icon">🔑</div>
+      <div>
+        <strong>대선 3회 출마 도전, 3회 좌절:</strong><br>
+        2005년 대선 — 6위(5.94%). 2021년 — 자격 박탈. 2024년 — 자격 박탈.<br>
+        공식 이유: 딸 파테메의 미국 체류 및 영국 시민권. 실제: 하메네이가 독자 권력 기반 형성을 경계했다는 분석이 지배적이다. 체제의 핵심 인물이면서도, 체제가 그를 대통령으로는 원하지 않았다는 역설이다.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 7. 지금 -->
+  <div class="section" id="now">
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <div class="section-title">
+        하메네이 사망 이후 — 지금 무슨 일이 벌어지고 있나
+        <small>2026.2.28 ~ 현재 · 권력 공백 · 후계 구도</small>
+      </div>
+    </div>
+
+    <div class="alert red">
+      <div class="alert-icon">🚨</div>
+      <div>
+        <strong>2026.2.28 · 하메네이 사망 — 이란 헌정 위기:</strong><br>
+        미국-이스라엘 Operation Epic Fury에서 하메네이가 사망했다. 동시에 IRGC 참모총장 무사비도 사망 확인. 이란 헌법은 최고지도자 사망 시 <strong>전문가위원회(Assembly of Experts)가 2/3 찬성으로 후계자를 선출</strong>하도록 규정한다.
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot now"></div>
+        <div class="tl-era">2026.3.1 · 현재</div>
+        <div class="tl-title">🔴 3인 임시위원회 체제 가동</div>
+        <div class="tl-body">페제시키안 대통령 + 모흐세니에제이 사법부 수장 + 아라피 성직자. 새 최고지도자 선출 전까지 국가 운영. 라리자니는 이 위원회 밖에서 SNSC 의장으로 실질적 안보 권한을 행사 중이다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot gold"></div>
+        <div class="tl-era">하메네이 사전 지정</div>
+        <div class="tl-title">하메네이, 사망 직전 라리자니를 "비상 관리자"로 내정</div>
+        <div class="tl-body">브리태니커 보도에 따르면, 하메네이는 2026년 2월 말 "자신이 사망할 경우 라리자니가 임시로 국가를 관리하는 것이 선호된다"는 의사를 표명했다. 그러나 하메네이가 실제로 사망했을 때 이란 정부의 공식 발표는 없었다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-era">다음 단계</div>
+        <div class="tl-title">전문가위원회 소집 — 최고지도자 선출 절차 개시</div>
+        <div class="tl-body">이란 헌법 제107조. 최고지도자는 전문가위원회 2/3 찬성으로 선출. 라리자니는 성직자 자격이 없다는 것이 가장 큰 장애물이다. 그러나 하메네이의 사전 의사 표명과 SNSC 의장직 보유가 현실적 영향력을 부여한다.</div>
+      </div>
+    </div>
+
+    <div class="alert dark">
+      <div class="alert-icon">⚖️</div>
+      <div>
+        <strong>라리자니의 치명적 약점 — 성직자 자격 없음:</strong><br>
+        이란 헌법은 최고지도자가 <strong>"마르자'이야트(최고 법학 권위)"</strong> 또는 그에 준하는 성직자 자격을 갖춰야 한다고 규정한다. 라리자니는 신학 교육을 받았지만 공식 성직자 가운을 입지 않는다. 이것이 최고지도자 직위의 가장 큰 형식적 장벽이다. 다만 헌법해석권을 가진 헌법수호위원회가 이를 달리 해석할 여지도 있다.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 8. 시장 의미 -->
+  <div class="section" id="market">
+    <div class="section-header">
+      <div class="section-num">08</div>
+      <div class="section-title">
+        라리자니가 권력을 잡으면 — 시장에 무슨 일이 생기나
+        <small>유가 · 금리 · 달러 · BTC · 호르무즈의 방향</small>
+      </div>
+    </div>
+
+    <p class="prose">이것이 매크로렌즈가 이 인물을 추적하는 이유다. 라리자니의 성격이 이란 신정권의 성격을 결정하고, 그것이 호르무즈 해협의 개폐를 결정하며, 그것이 WTI 유가를 결정하고, 그 유가가 인플레이션·금리·달러·자산 가격 전체를 결정한다.</p>
+
+    <div class="market-box">
+      <div class="market-box-title">시나리오별 시장 방향 / Larijani Scenario Matrix</div>
+      <div class="market-row">
+        <div class="market-label">🟢 시나리오 A — 라리자니 실권 + 협상 신호</div>
+        <div class="market-val gold">리스크온</div>
+      </div>
+      <div class="market-row">
+        <div class="market-label">&nbsp;&nbsp;&nbsp;WTI 유가</div>
+        <div class="market-val up">$80~90 안정화</div>
+      </div>
+      <div class="market-row">
+        <div class="market-label">&nbsp;&nbsp;&nbsp;10년물 금리</div>
+        <div class="market-val up">3.8% 하향 가능</div>
+      </div>
+      <div class="market-row">
+        <div class="market-label">&nbsp;&nbsp;&nbsp;BTC</div>
+        <div class="market-val up">$70K+ 회복 시도</div>
+      </div>
+      <div class="market-row" style="margin-top:12px;">
+        <div class="market-label">🔴 시나리오 B — 강경파 실권 + 호르무즈 봉쇄 지속</div>
+        <div class="market-val warn">리스크오프</div>
+      </div>
+      <div class="market-row">
+        <div class="market-label">&nbsp;&nbsp;&nbsp;WTI 유가</div>
+        <div class="market-val down">$100~120+</div>
+      </div>
+      <div class="market-row">
+        <div class="market-label">&nbsp;&nbsp;&nbsp;10년물 금리</div>
+        <div class="market-val down">안전자산 수요로 하락 / 인플레로 상승 → 충돌</div>
+      </div>
+      <div class="market-row">
+        <div class="market-label">&nbsp;&nbsp;&nbsp;BTC</div>
+        <div class="market-val down">$58K 지지선 테스트</div>
+      </div>
+      <div class="market-row" style="margin-top:12px;">
+        <div class="market-label">&nbsp;&nbsp;&nbsp;금(Gold)</div>
+        <div class="market-val up">두 시나리오 모두 강세</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>관찰 지표</th>
+          <th>라리자니 실권 신호</th>
+          <th>강경파 실권 신호</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>공식 발언 톤</td>
+          <td><span class="tag tag-green">"협상 가능" 반복</span></td>
+          <td><span class="tag tag-red">"저항" "순교" 강조</span></td>
+        </tr>
+        <tr>
+          <td>호르무즈</td>
+          <td><span class="tag tag-green">유조선 통행 부분 재개</span></td>
+          <td><span class="tag tag-red">IRGC 봉쇄 강화 성명</span></td>
+        </tr>
+        <tr>
+          <td>오만·카타르 채널</td>
+          <td><span class="tag tag-green">중재 수용 신호</span></td>
+          <td><span class="tag tag-red">중재 거부</span></td>
+        </tr>
+        <tr>
+          <td>전문가위원회 소집</td>
+          <td><span class="tag tag-gold">절차적 진행 → 라리자니 지지 발언</span></td>
+          <td><span class="tag tag-red">IRGC 개입, 절차 중단</span></td>
+        </tr>
+        <tr>
+          <td>중국·러시아 반응</td>
+          <td><span class="tag tag-blue">외교적 지지 성명</span></td>
+          <td><span class="tag tag-red">군사 지원 신호</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 9. 인물론 -->
+  <div class="section" id="paradox">
+    <div class="section-header">
+      <div class="section-num">09</div>
+      <div class="section-title">
+        인물론 — 다섯 개의 역설
+        <small>이란 권력의 가장 복잡한 인간</small>
+      </div>
+    </div>
+
+    <div class="phil-item">
+      <div class="phil-num">01</div>
+      <div class="phil-content">
+        <div class="phil-title">이라크 출생 이란인 — 정통성의 역설</div>
+        <div class="phil-body">이란 최고지도자 유력 후보가 이란 땅에서 태어나지 않았다. 아버지가 레자 샤를 피해 나자프로 망명한 덕분에 이라크에서 태어났고, 세 살 때 이란으로 왔다. 혁명 이란의 체제 수호자가 혁명 이전 망명자 가정 출신이라는 아이러니다.</div>
+      </div>
+    </div>
+    <div class="phil-item">
+      <div class="phil-num">02</div>
+      <div class="phil-content">
+        <div class="phil-title">칸트 철학 박사 × 이슬람 혁명 수호자</div>
+        <div class="phil-body">서양 철학의 정점인 칸트를 연구한 철학 박사가, 서방과의 단절을 체제 정체성으로 삼는 이슬람 공화국의 핵심 수호자다. 그는 서방의 논리를 가장 잘 아는 사람이기 때문에 서방과 협상할 수 있지만, 바로 그 이유로 체제 내 강경파의 의심을 산다.</div>
+      </div>
+    </div>
+    <div class="phil-item">
+      <div class="phil-num">03</div>
+      <div class="phil-content">
+        <div class="phil-title">협상론자 × 시위 탄압 지휘자</div>
+        <div class="phil-body">오만 채널에서 "핵 문제는 해결 가능하다"고 말한 같은 입이, 반정부 시위대에 대한 폭력을 촉구한 것으로 미국 재무부에 기록돼 있다. 서방 협상 파트너이면서 서방 제재 대상인 동시에 존재하는 인물이다.</div>
+      </div>
+    </div>
+    <div class="phil-item">
+      <div class="phil-num">04</div>
+      <div class="phil-content">
+        <div class="phil-title">체제의 기둥 × 체제에 의한 거부</div>
+        <div class="phil-body">하메네이의 최측근이자 이란 역사상 최장수 국회의장이면서, 대선 출마를 세 번이나 거부당했다. 체제가 그를 없어서는 안 될 존재로 쓰면서도, 독자 권력 기반을 갖는 것은 허용하지 않았다. 딸의 미국 체류가 공식 이유지만, 실제는 하메네이의 경계였다.</div>
+      </div>
+    </div>
+    <div class="phil-item">
+      <div class="phil-num">05</div>
+      <div class="phil-content">
+        <div class="phil-title">이란의 얼굴 × 이란의 포로</div>
+        <div class="phil-body">서방과 대화할 수 있는 유일한 이란 지도자급 인물이지만, 그 자신은 미국 제재 대상이다. 그의 딸은 미국 에모리 대학교 교수였다가 이란계 미국인들의 압력으로 해고됐다. 이란과 서방의 갈등이 그의 가족 안에서도 반복된다.</div>
+      </div>
+    </div>
+
+    <div class="alert gold" style="margin-top:24px;">
+      <div class="alert-icon">📖</div>
+      <div>
+        <strong>롱맨의 인물 평가:</strong><br>
+        알리 라리자니는 이란이 배출한 가장 전략적인 정치인이다. 그는 체제의 모든 층 — 성직자, IRGC, 입법부, 외교, 안보 — 을 경험하고 그 언어를 구사할 수 있는 유일한 인물에 가깝다. 동시에, 그가 최고지도자가 된다는 것은 이란 체제의 변형을 의미한다. 성직자 통치(벨라야트-에 파키)가 아닌, 실용주의 테크노크라트 통치로의 이행. 그것이 이란에서 가능한지, 그것이 시장과 지정학에 어떤 의미인지 — 이것이 앞으로 수주, 수개월의 핵심 질문이다.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- FINAL -->
+  <div class="final-box">
+    <div class="final-eyebrow">편집자 주 / Editor's Note</div>
+    <div class="final-title">이 인물을 지금 알아야 하는 이유</div>
+    <div class="final-body">
+      라리자니는 지금 이 순간 <strong>WTI 유가, 10년물 금리, BTC 가격에 가장 큰 영향을 미치는 인물</strong>이다. 호르무즈 해협을 통해 전 세계 원유의 31%가 통과한다. 그 해협이 열리느냐 닫히느냐가 에너지 가격을 결정하고, 에너지 가격이 인플레이션을 결정하며, 인플레이션이 연준의 금리 결정을 바꾸고, 금리가 전 세계 자산 가격을 움직인다.
+    </div>
+    <div class="final-body">
+      <strong>매크로렌즈 인물사전</strong>은 이런 인물들의 삶과 사상을 추적한다. 지정학은 뉴스가 아니라 구조다. 구조를 만드는 사람을 알아야 구조가 보인다.
+    </div>
+    <hr style="border:none;border-top:1px solid rgba(196,163,90,.15);margin:24px 0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">
+        <strong style="color:var(--gold);display:block;font-size:15px;margin-bottom:2px;">롱맨 | 매크로렌즈</strong>
+        차트가 아니라 구조를 읽는 공간.<br>
+        네이버 프리미엄 콘텐츠 · 매주 발행
+      </div>
+      <a href="https://contents.premium.naver.com/longman/longman1"
+         target="_blank"
+         style="display:inline-flex;align-items:center;gap:8px;
+                background:var(--gold);color:#0a0800;
+                padding:12px 26px;border-radius:4px;
+                font-weight:700;font-size:14px;text-decoration:none;
+                letter-spacing:.3px;white-space:nowrap;"
+         onmouseover="this.style.background='#e0c07a'"
+         onmouseout="this.style.background='#C4A35A'">
+        구독하기 →
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div>
+    <strong style="color:var(--gold);">매크로렌즈 인물사전 Vol.002 — 알리 라리자니</strong>
+    &nbsp;·&nbsp; <a href="https://naver.me/FZoeikYV">naver.me/FZoeikYV</a>
+  </div>
+  <div style="margin-top:6px;">
+    출처: Wikipedia · Britannica · Times of Israel · Jerusalem Post · Türkiye Today · Encyclopedia.com 종합<br>
+    본 문서는 공개 자료 기반 독립 분석입니다. 2026.03.02 발행.
+  </div>
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.nav-tab');
+  const sections = document.querySelectorAll('.section[id]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        tabs.forEach(t => t.classList.remove('active'));
+        const a = document.querySelector(`.nav-tab[href="#${e.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+  tabs.forEach(t => t.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(t.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+  }));
+</script>
+</body>
+</html>
