@@ -1,0 +1,11 @@
+{
+  "name": "factmark",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SNS 발언 신뢰도 인증 — 프로토타입 (정적 사이트 + 점수 엔진)",
+  "scripts": {
+    "test": "node --test",
+    "start": "python3 -m http.server 8080"
+  },
+  "license": "UNLICENSED"
+}
